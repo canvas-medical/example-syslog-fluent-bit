@@ -1,0 +1,40 @@
+service:
+  flush: 1
+  log_level: info
+  parsers_file: parsers.conf
+pipeline:
+  inputs:
+    - name: syslog
+      mode: tcp
+      port: 5140
+      buffer_chunk_size: 32000
+      buffer_max_size: 64000
+      receive_buffer_size: 512000
+      tls: on
+      tls.verify: off
+      tls.crt_file: self-signed.crt
+      tls.key_file: self-signed.key
+  outputs:
+    - name: stdout
+      match: '*'
+
+    # https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch
+    # https://github.com/fluent/fluent-bit-docs/blob/master/administration/aws-credentials.md
+    # - name: cloudwatch_logs
+    #   match: '*'
+    #   region: us-east-1
+    #   log_group_name: fluent-bit-cloudwatch
+    #   log_stream_prefix: from-fluent-bit-
+    #   auto_create_group: on
+
+    # https://docs.fluentbit.io/manual/pipeline/outputs/postgresql
+    # - name: pgsql
+    #   match: '*'
+    #   host: 172.17.0.2
+    #   port: 5432
+    #   user: fluentbit
+    #   password: fluentbit-password
+    #   database: fluentbit
+    #   table: fluentbit
+    #   connection_options: -c statement_timeout=0
+    #   timestamp_key: ts
